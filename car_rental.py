@@ -5,11 +5,11 @@ header ={
 }
 
 menu ={
-    1:'1. Display Data',
-    2:'2. Car Management',
-    3:'3. Rental Management',
-    4:'4. Customer Management',
-    5:'5. Exit'
+    '1':'1. Display Data',
+    '2':'2. Car Management',
+    '3':'3. Rental Management',
+    '4':'4. Customer Management',
+    'x':'x. Exit'
 }
 
 show_menu={
@@ -83,7 +83,7 @@ def display_menu(): #Display the Main Menu
     print('Select menu to begin:')
     for menu_key,menu_val in menu.items(): # Loop through menu dict
         print(f'{menu_key}: {menu_val}') # to print all the menu
-    choose_menu = int(input('Enter the number of the menu you want to run: '))
+    choose_menu = input('Enter the number of the menu you want to run: ')
     return choose_menu
 
 def display_show(): # Menu 1 Display Data
@@ -159,15 +159,15 @@ def filter_display_cars(filter):
     #return filtered dict by filter selection
     if filter in ['4s','5s','7s']: # if the selection is seat number
         cars_data_filtered = [(n,cars_data[n]) for n in cars_data if cars_data[n]['seat'] == int(filter[0])] # filter based on the seat
-    elif filter == 'mbs': # if the
+    elif filter == 'mbs': # if the seat is more than 10
         cars_data_filtered = [(n,cars_data[n]) for n in cars_data if cars_data[n]['seat'] >= 10]
-    elif filter in ['rt','pt']:
+    elif filter in ['rt','pt']:# if the selection is car type
         cars_data_filtered = [(n,cars_data[n]) for n in cars_data if cars_data[n]['type'] == cars_filter[filter]]
-    elif filter == '500ap':
+    elif filter == '500ap': # if the selection is price above 500000
         cars_data_filtered = [(n,cars_data[n]) for n in cars_data if cars_data[n]['price'] >= 500000]
-    elif filter == '500bp':
+    elif filter == '500bp': # if the selection is price below 500000
         cars_data_filtered = [(n,cars_data[n]) for n in cars_data if cars_data[n]['price'] <= 500000]
-    elif filter in ['a','r','m']:
+    elif filter in ['a','r','m']: # if the selection is car status
         cars_data_filtered = [(n,cars_data[n]) for n in cars_data if cars_data[n]['status'] == cars_status[filter]]
     else:
         invalid_input_loop()
@@ -228,11 +228,19 @@ def cars_show(): # Menu 2 Car Management Menu
     return choose_show
 
 def add_cars(): # 2.a. Add Car
-    new_name = input('Enter Car Name: ')
+    while True:
+        new_name = input('Enter Car Name: ')
+        if len(new_name.split()) < 2: #Car Name Validation, if not two words
+            print('Car name should be Brand + Type!') # throw error
+            continue 
+
+        break # if input is true, break from the loop
+
     new_seat = int(input('Enter Car Seat: '))
     new_type = input('Enter Car Type (regular or premium): ')
     new_price = int(input('Enter Car Rent Price per Day: '))
 
+    
     split_new_name = new_name.split()
 
     #Create a unique id for every cars
@@ -541,7 +549,7 @@ def edit_cust(): # 4.b. Edit Customer
     if any(k for k in cust_data.keys()): # check if there is any customer on cust_data dict
         display_cust()
         print('\nEDIT CUSTOMER DATA\n')
-        cust_to_edit = input('Enter Customer ID:') #input customer id 
+        cust_to_edit = input('Enter Customer ID:').upper() #input customer id 
         if cust_to_edit in cust_data: #check if the customer id is exist
             cust_features_edit = input('Enter Data to update (name,nik,phone):') .lower() #input column to edit
         
@@ -618,7 +626,7 @@ print('CAR RENTAL')
 #Looping for menu
 while True:
     menu_choice = display_menu()
-    if menu_choice == 1:
+    if menu_choice == '1':
         show_choice = display_show()
         if show_choice == 'a':
             display_cars(cars_data)
@@ -632,7 +640,7 @@ while True:
         else:
             no_exist(show_choice)
 
-    elif menu_choice == 2:
+    elif menu_choice == '2':
         display_cars(cars_data)
         cars_choice = cars_show()
         if cars_choice == 'a':
@@ -646,7 +654,7 @@ while True:
         else:
             no_exist(cars_choice)
 
-    elif menu_choice == 3:
+    elif menu_choice == '3':
         display_rent()
         rent_choice =  rent_show()
         if rent_choice == 'a':
@@ -658,7 +666,7 @@ while True:
         else:
             no_exist(rent_choice)
 
-    elif menu_choice == 4:
+    elif menu_choice == '4':
         display_cust()
         cust_choice =  cust_show()
         if cust_choice == 'a':
@@ -672,7 +680,7 @@ while True:
         else:
             no_exist(cust_choice)
 
-    elif menu_choice == 5:
+    elif menu_choice == 'x':
         print('Thank you! :)')
         print('Closing the program...')
         exit()
